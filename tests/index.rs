@@ -10,6 +10,7 @@ use rocket::local::Client;
 use rocket::http::Status;
 
 use rocket_json_response::*;
+use json_gettext::Value;
 
 #[get("/status")]
 fn status() -> JSONResponseWithoutData {

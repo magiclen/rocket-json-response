@@ -3,12 +3,12 @@
 //!
 //! Typically, the code **0** means **OK**. You can define other codes by yourself by implementing `JSONResponseCode` trait for your struct.
 
-extern crate json_gettext;
+pub extern crate json_gettext;
 extern crate rocket;
 
 use std::io::Cursor;
 
-pub use json_gettext::Value;
+use json_gettext::Value;
 
 use rocket::request::Request;
 use rocket::response::{self, Response, Responder};

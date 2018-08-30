@@ -5,7 +5,7 @@ This is a crate which provides `JSONResponse` and `JSONResponseWithoutData` stru
 
 Typically, the code **0** means **OK**. You can define other codes by yourself by implementing `JSONResponseCode` trait for your struct.
 
-Refer to `tests/index.rs` to see an complete example.
+Refer to `tests/index.rs` to see a complete example.
 
 ## License
 

@@ -1,37 +1,26 @@
-//! # JSON Response for Rocket Framework
-//! This is a crate which provides `JSONResponse` and `JSONResponseWithoutData` structs to response JSON format data with an additional **code** integer value.
-//!
-//! Typically, the code **0** means **OK**. You can define other codes by yourself by implementing `JSONResponseCode` trait for your struct.
-//!
-//! Refer to `tests/index.rs` to see a complete example.
+/*!
+# JSON Response for Rocket Framework
+
+This is a crate which provides `JSONResponse` and `JSONResponseWithoutData` structs to response JSON format data with an additional **code** integer value.
+
+Typically, the code **0** means **OK**. You can define other codes by yourself by implementing `JSONResponseCode` trait for your struct.
+
+See `examples`.
+*/
 
 pub extern crate json_gettext;
 extern crate rocket;
 
+mod json_response_code;
+
+pub use json_response_code::JSONResponseCode;
+
 use std::io::Cursor;
 
-use json_gettext::Value;
+use json_gettext::JSONGetTextValue;
 
 use rocket::request::Request;
 use rocket::response::{self, Response, Responder};
-
-#[doc(hidden)]
-pub const JSON_RESPONSE_CHUNK_SIZE: u64 = 4096;
-
-/// The code of your JSON response.
-pub trait JSONResponseCode {
-    /// Assume the code **0** means **OK**. You can define other codes by yourself.
-    /// This method will be called for one time when the response is being triggered. You can do something (perhaps keep a log?) at the moment.
-    fn get_code(&self) -> i32;
-}
-
-struct CodeOK;
-
-impl JSONResponseCode for CodeOK {
-    fn get_code(&self) -> i32 {
-        0
-    }
-}
 
 /// To respond JSON data.
 ///
@@ -45,7 +34,7 @@ impl JSONResponseCode for CodeOK {
 /// ```
 pub struct JSONResponse<'a> {
     pub code: Box<JSONResponseCode>,
-    pub data: Value<'a>,
+    pub data: JSONGetTextValue<'a>,
 }
 
 impl<'a> Responder<'a> for JSONResponse<'a> {
@@ -57,21 +46,21 @@ impl<'a> Responder<'a> for JSONResponse<'a> {
         response
             .raw_header("Content-Type", "application/json")
             .raw_header("Content-Length", json.len().to_string())
-            .chunked_body(Cursor::new(json), JSON_RESPONSE_CHUNK_SIZE);
+            .sized_body(Cursor::new(json));
 
         response.ok()
     }
 }
 
 impl<'a> JSONResponse<'a> {
-    pub fn ok(data: Value<'a>) -> Self {
+    pub fn ok(data: JSONGetTextValue<'a>) -> Self {
         JSONResponse {
-            code: Box::new(CodeOK),
+            code: Box::new(0),
             data,
         }
     }
 
-    pub fn err<T: JSONResponseCode + 'static>(code: T, data: Value<'a>) -> Self {
+    pub fn err<T: JSONResponseCode + 'static>(code: T, data: JSONGetTextValue<'a>) -> Self {
         JSONResponse {
             code: Box::new(code),
             data,
@@ -94,7 +83,7 @@ pub struct JSONResponseWithoutData {
 
 impl JSONResponseWithoutData {
     pub fn ok() -> Self {
-        JSONResponseWithoutData { code: Box::new(CodeOK) }
+        JSONResponseWithoutData { code: Box::new(0) }
     }
 
     pub fn err<T: JSONResponseCode + 'static>(code: T) -> Self {
@@ -111,7 +100,7 @@ impl<'a> Responder<'a> for JSONResponseWithoutData {
         response
             .raw_header("Content-Type", "application/json")
             .raw_header("Content-Length", json.len().to_string())
-            .chunked_body(Cursor::new(json), JSON_RESPONSE_CHUNK_SIZE);
+            .sized_body(Cursor::new(json));
 
         response.ok()
     }

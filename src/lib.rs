@@ -15,11 +15,11 @@ mod json_response_code;
 mod to_json;
 
 use std::marker::PhantomData;
+use std::io::Cursor;
+use std::fmt::{self, Formatter, Debug};
 
 pub use json_response_code::JSONResponseCode;
 pub use to_json::ToJSON;
-
-use std::io::Cursor;
 
 use json_gettext::JSONGetTextValue;
 
@@ -40,6 +40,17 @@ pub struct JSONResponse<'a, T: ToJSON = JSONGetTextValue<'a>> {
     pub code: Box<JSONResponseCode>,
     pub data: T,
     phantom: PhantomData<&'a T>,
+}
+
+impl<'a, T: ToJSON> Debug for JSONResponse<'a, T> {
+    #[inline]
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        if f.alternate() {
+            f.write_fmt(format_args!("JSONResponse {{\n    code: {},\n    data: {}\n}}", self.code.get_code(), self.data.to_json()))
+        } else {
+            f.write_fmt(format_args!("JSONResponse {{code: {}, data: {}}}", self.code.get_code(), self.data.to_json()))
+        }
+    }
 }
 
 impl<'a, T: ToJSON> Responder<'a> for JSONResponse<'a, T> {

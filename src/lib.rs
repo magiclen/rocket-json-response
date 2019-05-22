@@ -12,8 +12,12 @@ pub extern crate json_gettext;
 extern crate rocket;
 
 mod json_response_code;
+mod to_json;
+
+use std::marker::PhantomData;
 
 pub use json_response_code::JSONResponseCode;
+pub use to_json::ToJSON;
 
 use std::io::Cursor;
 
@@ -32,12 +36,13 @@ use rocket::response::{self, Response, Responder};
 ///    data: <json value>
 /// }
 /// ```
-pub struct JSONResponse<'a> {
+pub struct JSONResponse<'a, T: ToJSON = JSONGetTextValue<'a>> {
     pub code: Box<JSONResponseCode>,
-    pub data: JSONGetTextValue<'a>,
+    pub data: T,
+    phantom: PhantomData<&'a T>,
 }
 
-impl<'a> Responder<'a> for JSONResponse<'a> {
+impl<'a, T: ToJSON> Responder<'a> for JSONResponse<'a, T> {
     fn respond_to(self, _: &Request) -> response::Result<'a> {
         let json = format!("{{\"code\":{},\"data\":{}}}", self.code.get_code(), self.data.to_json());
 
@@ -52,18 +57,20 @@ impl<'a> Responder<'a> for JSONResponse<'a> {
     }
 }
 
-impl<'a> JSONResponse<'a> {
-    pub fn ok(data: JSONGetTextValue<'a>) -> Self {
+impl<'a, T: ToJSON> JSONResponse<'a, T> {
+    pub fn ok(data: T) -> Self {
         JSONResponse {
             code: Box::new(0),
             data,
+            phantom: PhantomData,
         }
     }
 
-    pub fn err<T: JSONResponseCode + 'static>(code: T, data: JSONGetTextValue<'a>) -> Self {
+    pub fn err<K: JSONResponseCode + 'static>(code: K, data: T) -> Self {
         JSONResponse {
             code: Box::new(code),
             data,
+            phantom: PhantomData,
         }
     }
 }
@@ -86,7 +93,7 @@ impl JSONResponseWithoutData {
         JSONResponseWithoutData { code: Box::new(0) }
     }
 
-    pub fn err<T: JSONResponseCode + 'static>(code: T) -> Self {
+    pub fn err<K: JSONResponseCode + 'static>(code: K) -> Self {
         JSONResponseWithoutData { code: Box::new(code) }
     }
 }

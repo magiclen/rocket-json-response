@@ -5,7 +5,7 @@ extern crate rocket;
 
 extern crate rocket_json_response;
 
-use rocket_json_response::{JSONResponse, JSONResponseWithoutData, json_gettext::JSONGetTextValue};
+use rocket_json_response::{JSONResponse, JSONResponseWithoutData};
 
 #[get("/")]
 fn alive() -> JSONResponseWithoutData {
@@ -13,13 +13,13 @@ fn alive() -> JSONResponseWithoutData {
 }
 
 #[get("/<id>")]
-fn id(id: u32) -> JSONResponse<'static> {
-    JSONResponse::ok(JSONGetTextValue::from_u32(id))
+fn id(id: u32) -> JSONResponse<'static, u32> {
+    JSONResponse::ok(id)
 }
 
 #[get("/<id>", rank = 1)]
-fn id_str(id: String) -> JSONResponse<'static> {
-    JSONResponse::err(1, JSONGetTextValue::from_string(id)) // The code "1" means the id is not a u32 value
+fn id_str(id: String) -> JSONResponse<'static, String> {
+    JSONResponse::err(1, id) // The code "1" means the id is not a u32 value
 }
 
 fn main() {

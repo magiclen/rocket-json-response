@@ -1,6 +1,6 @@
 [package]
 name = "rocket-json-response"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Magic Len <len@magiclen.org>"]
 repository = "https://github.com/magiclen/rocket-json-response"
 homepage = "https://magiclen.org/rocket-json-response"
@@ -15,4 +15,4 @@ travis-ci = { repository = "magiclen/rocket-json-response", branch = "master" }
 
 [dependencies]
 rocket = "0.4"
-json-gettext = "2.1.0"
+json-gettext = "2.2"

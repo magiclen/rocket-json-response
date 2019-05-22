@@ -6,30 +6,42 @@ pub trait JSONResponseCode {
 }
 
 impl JSONResponseCode for i8 {
+    #[inline]
     fn get_code(&self) -> i32 {
         *self as i32
     }
 }
 
 impl JSONResponseCode for i16 {
+    #[inline]
     fn get_code(&self) -> i32 {
         *self as i32
     }
 }
 
 impl JSONResponseCode for i32 {
+    #[inline]
     fn get_code(&self) -> i32 {
         *self
     }
 }
 
 impl JSONResponseCode for u8 {
+    #[inline]
     fn get_code(&self) -> i32 {
         *self as i32
     }
 }
 
 impl JSONResponseCode for u16 {
+    #[inline]
+    fn get_code(&self) -> i32 {
+        *self as i32
+    }
+}
+
+impl JSONResponseCode for u32 {
+    #[inline]
     fn get_code(&self) -> i32 {
         *self as i32
     }

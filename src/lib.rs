@@ -37,8 +37,8 @@ use rocket::response::{self, Response, Responder};
 /// }
 /// ```
 pub struct JSONResponse<'a, T: ToJSON = JSONGetTextValue<'a>> {
-    pub code: Box<JSONResponseCode>,
-    pub data: T,
+    code: Box<JSONResponseCode>,
+    data: T,
     phantom: PhantomData<&'a T>,
 }
 
@@ -53,22 +53,8 @@ impl<'a, T: ToJSON> Debug for JSONResponse<'a, T> {
     }
 }
 
-impl<'a, T: ToJSON> Responder<'a> for JSONResponse<'a, T> {
-    fn respond_to(self, _: &Request) -> response::Result<'a> {
-        let json = format!("{{\"code\":{},\"data\":{}}}", self.code.get_code(), self.data.to_json());
-
-        let mut response = Response::build();
-
-        response
-            .raw_header("Content-Type", "application/json")
-            .raw_header("Content-Length", json.len().to_string())
-            .sized_body(Cursor::new(json));
-
-        response.ok()
-    }
-}
-
 impl<'a, T: ToJSON> JSONResponse<'a, T> {
+    #[inline]
     pub fn ok(data: T) -> Self {
         JSONResponse {
             code: Box::new(0),
@@ -77,12 +63,27 @@ impl<'a, T: ToJSON> JSONResponse<'a, T> {
         }
     }
 
+    #[inline]
     pub fn err<K: JSONResponseCode + 'static>(code: K, data: T) -> Self {
         JSONResponse {
             code: Box::new(code),
             data,
             phantom: PhantomData,
         }
+    }
+}
+
+impl<'a, T: ToJSON> Responder<'a> for JSONResponse<'a, T> {
+    fn respond_to(self, _: &Request) -> response::Result<'a> {
+        let json = format!("{{\"code\":{},\"data\":{}}}", self.code.get_code(), self.data.to_json());
+
+        let mut response = Response::build();
+
+        response
+            .raw_header("Content-Type", "application/json")
+            .sized_body(Cursor::new(json));
+
+        response.ok()
     }
 }
 
@@ -96,14 +97,27 @@ impl<'a, T: ToJSON> JSONResponse<'a, T> {
 /// }
 /// ```
 pub struct JSONResponseWithoutData {
-    pub code: Box<JSONResponseCode>
+    code: Box<JSONResponseCode>
+}
+
+impl Debug for JSONResponseWithoutData {
+    #[inline]
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        if f.alternate() {
+            f.write_fmt(format_args!("JSONResponse {{\n    code: {}\n}}", self.code.get_code()))
+        } else {
+            f.write_fmt(format_args!("JSONResponse {{code: {}}}", self.code.get_code()))
+        }
+    }
 }
 
 impl JSONResponseWithoutData {
+    #[inline]
     pub fn ok() -> Self {
         JSONResponseWithoutData { code: Box::new(0) }
     }
 
+    #[inline]
     pub fn err<K: JSONResponseCode + 'static>(code: K) -> Self {
         JSONResponseWithoutData { code: Box::new(code) }
     }
@@ -117,7 +131,6 @@ impl<'a> Responder<'a> for JSONResponseWithoutData {
 
         response
             .raw_header("Content-Type", "application/json")
-            .raw_header("Content-Length", json.len().to_string())
             .sized_body(Cursor::new(json));
 
         response.ok()

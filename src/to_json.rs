@@ -134,3 +134,15 @@ impl<T: ToJSON> ToJSON for Option<T> {
         }
     }
 }
+
+#[macro_export]
+macro_rules! serialize_to_json {
+    ($t:ty) => {
+        impl crate::rocket_json_response::ToJSON for $t {
+            #[inline]
+            fn to_json(&self) -> String {
+                crate::rocket_json_response::json_gettext::serde_json::to_value(self).unwrap().to_json()
+            }
+        }
+    };
+}

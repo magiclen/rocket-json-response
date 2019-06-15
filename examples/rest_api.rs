@@ -57,10 +57,38 @@ fn user() -> JSONResponse<'static, User> {
     })
 }
 
+use rocket::request::{Request, FromRequest, Outcome as RequestOutcome};
+use rocket::Outcome;
+
+struct UserAgent<'a> {
+    user_agent: &'a str
+}
+
+impl<'a, 'r> FromRequest<'a, 'r> for UserAgent<'a> {
+    type Error = ();
+
+    fn from_request(request: &'a Request<'r>) -> RequestOutcome<Self, Self::Error> {
+        let user_agent: Option<&str> = request.headers().get("user-agent").next();
+
+        match user_agent {
+            Some(user_agent) => Outcome::Success(UserAgent {
+                user_agent
+            }),
+            None => Outcome::Forward(())
+        }
+    }
+}
+
+#[get("/client/user-agent")]
+fn user_agent(user_agent: UserAgent) -> JSONResponse<&str> {
+    JSONResponse::ok(user_agent.user_agent)
+}
+
 fn main() {
     rocket::ignite()
         .mount("/", routes![alive])
         .mount("/", routes![id, id_str])
         .mount("/", routes![user])
+        .mount("/", routes![user_agent])
         .launch();
 }

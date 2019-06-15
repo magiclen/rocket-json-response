@@ -37,7 +37,7 @@ use rocket::response::{self, Response, Responder};
 /// }
 /// ```
 pub struct JSONResponse<'a, T: ToJSON = JSONGetTextValue<'a>> {
-    code: Box<JSONResponseCode>,
+    code: Box<dyn JSONResponseCode>,
     data: T,
     phantom: PhantomData<&'a T>,
 }
@@ -97,7 +97,7 @@ impl<'a, T: ToJSON> Responder<'a> for JSONResponse<'a, T> {
 /// }
 /// ```
 pub struct JSONResponseWithoutData {
-    code: Box<JSONResponseCode>
+    code: Box<dyn JSONResponseCode>
 }
 
 impl Debug for JSONResponseWithoutData {

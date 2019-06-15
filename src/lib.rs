@@ -104,9 +104,9 @@ impl Debug for JSONResponseWithoutData {
     #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         if f.alternate() {
-            f.write_fmt(format_args!("JSONResponse {{\n    code: {}\n}}", self.code.get_code()))
+            f.write_fmt(format_args!("JSONResponseWithoutData {{\n    code: {}\n}}", self.code.get_code()))
         } else {
-            f.write_fmt(format_args!("JSONResponse {{code: {}}}", self.code.get_code()))
+            f.write_fmt(format_args!("JSONResponseWithoutData {{code: {}}}", self.code.get_code()))
         }
     }
 }

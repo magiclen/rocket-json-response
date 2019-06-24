@@ -46,9 +46,13 @@ impl<'a, T: ToJSON> Debug for JSONResponse<'a, T> {
     #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         if f.alternate() {
-            f.write_fmt(format_args!("JSONResponse {{\n    code: {},\n    data: {}\n}}", self.code.get_code(), self.data.to_json()))
+            let debug_text = format!("JSONResponse {{\n    code: {},\n    data: {}\n}}", self.code.get_code(), self.data.to_json());
+
+            f.pad(&debug_text)
         } else {
-            f.write_fmt(format_args!("JSONResponse {{code: {}, data: {}}}", self.code.get_code(), self.data.to_json()))
+            let debug_text = format!("JSONResponse {{code: {}, data: {}}}", self.code.get_code(), self.data.to_json());
+
+            f.pad(&debug_text)
         }
     }
 }
@@ -104,9 +108,13 @@ impl Debug for JSONResponseWithoutData {
     #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         if f.alternate() {
-            f.write_fmt(format_args!("JSONResponseWithoutData {{\n    code: {}\n}}", self.code.get_code()))
+            let debug_text = format!("JSONResponseWithoutData {{\n    code: {}\n}}", self.code.get_code());
+
+            f.pad(&debug_text)
         } else {
-            f.write_fmt(format_args!("JSONResponseWithoutData {{code: {}}}", self.code.get_code()))
+            let debug_text = format!("JSONResponseWithoutData {{code: {}}}", self.code.get_code());
+
+            f.pad(&debug_text)
         }
     }
 }

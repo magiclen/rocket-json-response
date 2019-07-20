@@ -9,6 +9,8 @@ See `examples`.
 */
 
 pub extern crate json_gettext;
+#[macro_use]
+extern crate debug_helper;
 extern crate rocket;
 
 mod json_response_code;
@@ -45,15 +47,7 @@ pub struct JSONResponse<'a, T: ToJSON = JSONGetTextValue<'a>> {
 impl<'a, T: ToJSON> Debug for JSONResponse<'a, T> {
     #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        if f.alternate() {
-            let debug_text = format!("JSONResponse {{\n    code: {},\n    data: {}\n}}", self.code.get_code(), self.data.to_json());
-
-            f.pad(&debug_text)
-        } else {
-            let debug_text = format!("JSONResponse {{code: {}, data: {}}}", self.code.get_code(), self.data.to_json());
-
-            f.pad(&debug_text)
-        }
+        impl_debug_for_struct!(JSONResponseWithoutData, f, self, (.code, "{}", self.code.get_code()), (.data, "{}", self.data.to_json()));
     }
 }
 
@@ -107,15 +101,7 @@ pub struct JSONResponseWithoutData {
 impl Debug for JSONResponseWithoutData {
     #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        if f.alternate() {
-            let debug_text = format!("JSONResponseWithoutData {{\n    code: {}\n}}", self.code.get_code());
-
-            f.pad(&debug_text)
-        } else {
-            let debug_text = format!("JSONResponseWithoutData {{code: {}}}", self.code.get_code());
-
-            f.pad(&debug_text)
-        }
+        impl_debug_for_struct!(JSONResponseWithoutData, f, self, (.code, "{}", self.code.get_code()));
     }
 }
 

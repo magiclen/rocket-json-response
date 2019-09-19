@@ -8,14 +8,14 @@ pub trait JSONResponseCode {
 impl JSONResponseCode for i8 {
     #[inline]
     fn get_code(&self) -> i32 {
-        *self as i32
+        i32::from(*self)
     }
 }
 
 impl JSONResponseCode for i16 {
     #[inline]
     fn get_code(&self) -> i32 {
-        *self as i32
+        i32::from(*self)
     }
 }
 
@@ -29,14 +29,14 @@ impl JSONResponseCode for i32 {
 impl JSONResponseCode for u8 {
     #[inline]
     fn get_code(&self) -> i32 {
-        *self as i32
+        i32::from(*self)
     }
 }
 
 impl JSONResponseCode for u16 {
     #[inline]
     fn get_code(&self) -> i32 {
-        *self as i32
+        i32::from(*self)
     }
 }
 

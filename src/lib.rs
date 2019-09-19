@@ -16,9 +16,9 @@ extern crate rocket;
 mod json_response_code;
 mod to_json;
 
-use std::marker::PhantomData;
+use std::fmt::{self, Debug, Formatter};
 use std::io::Cursor;
-use std::fmt::{self, Formatter, Debug};
+use std::marker::PhantomData;
 
 pub use json_response_code::JSONResponseCode;
 pub use to_json::ToJSON;
@@ -26,7 +26,7 @@ pub use to_json::ToJSON;
 use json_gettext::JSONGetTextValue;
 
 use rocket::request::Request;
-use rocket::response::{self, Response, Responder};
+use rocket::response::{self, Responder, Response};
 
 /// To respond JSON data.
 ///
@@ -73,13 +73,12 @@ impl<'a, T: ToJSON> JSONResponse<'a, T> {
 
 impl<'a, T: ToJSON> Responder<'a> for JSONResponse<'a, T> {
     fn respond_to(self, _: &Request) -> response::Result<'a> {
-        let json = format!("{{\"code\":{},\"data\":{}}}", self.code.get_code(), self.data.to_json());
+        let json =
+            format!("{{\"code\":{},\"data\":{}}}", self.code.get_code(), self.data.to_json());
 
         let mut response = Response::build();
 
-        response
-            .raw_header("Content-Type", "application/json")
-            .sized_body(Cursor::new(json));
+        response.raw_header("Content-Type", "application/json").sized_body(Cursor::new(json));
 
         response.ok()
     }
@@ -95,7 +94,7 @@ impl<'a, T: ToJSON> Responder<'a> for JSONResponse<'a, T> {
 /// }
 /// ```
 pub struct JSONResponseWithoutData {
-    code: Box<dyn JSONResponseCode>
+    code: Box<dyn JSONResponseCode>,
 }
 
 impl Debug for JSONResponseWithoutData {
@@ -108,12 +107,16 @@ impl Debug for JSONResponseWithoutData {
 impl JSONResponseWithoutData {
     #[inline]
     pub fn ok() -> Self {
-        JSONResponseWithoutData { code: Box::new(0) }
+        JSONResponseWithoutData {
+            code: Box::new(0),
+        }
     }
 
     #[inline]
     pub fn err<K: JSONResponseCode + 'static>(code: K) -> Self {
-        JSONResponseWithoutData { code: Box::new(code) }
+        JSONResponseWithoutData {
+            code: Box::new(code),
+        }
     }
 }
 
@@ -123,9 +126,7 @@ impl<'a> Responder<'a> for JSONResponseWithoutData {
 
         let mut response = Response::build();
 
-        response
-            .raw_header("Content-Type", "application/json")
-            .sized_body(Cursor::new(json));
+        response.raw_header("Content-Type", "application/json").sized_body(Cursor::new(json));
 
         response.ok()
     }

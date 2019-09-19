@@ -1,7 +1,8 @@
 [package]
 name = "rocket-json-response"
-version = "0.5.9"
+version = "0.5.10"
 authors = ["Magic Len <len@magiclen.org>"]
+edition = "2018"
 repository = "https://github.com/magiclen/rocket-json-response"
 homepage = "https://magiclen.org/rocket-json-response"
 keywords = ["rocket", "server", "web", "json"]

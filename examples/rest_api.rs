@@ -14,7 +14,7 @@ extern crate serde_derive;
 #[macro_use]
 extern crate enum_ordinalize;
 
-use rocket_json_response::{JSONResponse, JSONResponseWithoutData, JSONResponseCode};
+use rocket_json_response::{JSONResponse, JSONResponseCode, JSONResponseWithoutData};
 
 #[derive(Serialize)]
 struct User {
@@ -24,9 +24,7 @@ struct User {
 
 serialize_to_json!(User);
 
-create_ordinalized_enum!(ErrorCode: i32,
-    IncorrectIDFormat = 100,
-);
+create_ordinalized_enum!(ErrorCode: i32, IncorrectIDFormat = 100,);
 
 impl JSONResponseCode for ErrorCode {
     fn get_code(&self) -> i32 {
@@ -57,11 +55,11 @@ fn user() -> JSONResponse<'static, User> {
     })
 }
 
-use rocket::request::{Request, FromRequest, Outcome as RequestOutcome};
+use rocket::request::{FromRequest, Outcome as RequestOutcome, Request};
 use rocket::Outcome;
 
 struct UserAgent<'a> {
-    user_agent: &'a str
+    user_agent: &'a str,
 }
 
 impl<'a, 'r> FromRequest<'a, 'r> for UserAgent<'a> {
@@ -71,10 +69,12 @@ impl<'a, 'r> FromRequest<'a, 'r> for UserAgent<'a> {
         let user_agent: Option<&str> = request.headers().get("user-agent").next();
 
         match user_agent {
-            Some(user_agent) => Outcome::Success(UserAgent {
-                user_agent
-            }),
-            None => Outcome::Forward(())
+            Some(user_agent) => {
+                Outcome::Success(UserAgent {
+                    user_agent,
+                })
+            }
+            None => Outcome::Forward(()),
         }
     }
 }

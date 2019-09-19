@@ -1,5 +1,5 @@
+use crate::json_gettext::serde_json::Value;
 use crate::json_gettext::JSONGetTextValue;
-use crate::json_gettext::{serde_json::Value};
 
 /// A data type that can be converted to a JSON-format string.
 pub trait ToJSON {
@@ -130,7 +130,7 @@ impl<T: ToJSON> ToJSON for Option<T> {
     fn to_json(&self) -> String {
         match self {
             Some(s) => s.to_json(),
-            None => JSONGetTextValue::null().to_json()
+            None => JSONGetTextValue::null().to_json(),
         }
     }
 }
@@ -141,7 +141,9 @@ macro_rules! serialize_to_json {
         impl crate::rocket_json_response::ToJSON for $t {
             #[inline]
             fn to_json(&self) -> String {
-                crate::rocket_json_response::json_gettext::serde_json::to_value(self).unwrap().to_json()
+                crate::rocket_json_response::json_gettext::serde_json::to_value(self)
+                    .unwrap()
+                    .to_json()
             }
         }
     };

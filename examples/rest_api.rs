@@ -24,7 +24,11 @@ struct User {
 
 serialize_to_json!(User);
 
-create_ordinalized_enum!(ErrorCode: i32, IncorrectIDFormat = 100,);
+#[derive(Ordinalize)]
+#[repr(i32)]
+pub enum ErrorCode {
+    IncorrectIDFormat = 100,
+}
 
 impl JSONResponseCode for ErrorCode {
     fn get_code(&self) -> i32 {

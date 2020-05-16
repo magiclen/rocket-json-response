@@ -1,6 +1,6 @@
 [package]
 name = "rocket-json-response"
-version = "0.5.10"
+version = "0.5.11"
 authors = ["Magic Len <len@magiclen.org>"]
 edition = "2018"
 repository = "https://github.com/magiclen/rocket-json-response"
@@ -22,7 +22,7 @@ debug-helper = "0.3"
 [dev-dependencies]
 serde = "1"
 serde_derive = "1"
-enum-ordinalize = "2"
+enum-ordinalize = "3.1"
 
 [dependencies.json-gettext]
 version = "3"

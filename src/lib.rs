@@ -25,6 +25,7 @@ pub use to_json::ToJSON;
 
 use json_gettext::JSONGetTextValue;
 
+use rocket::http::ContentType;
 use rocket::request::Request;
 use rocket::response::{self, Responder, Response};
 
@@ -78,7 +79,7 @@ impl<'a, T: ToJSON> Responder<'a> for JSONResponse<'a, T> {
 
         let mut response = Response::build();
 
-        response.raw_header("Content-Type", "application/json").sized_body(Cursor::new(json));
+        response.header(ContentType::JSON).sized_body(Cursor::new(json));
 
         response.ok()
     }
@@ -126,7 +127,7 @@ impl<'a> Responder<'a> for JSONResponseWithoutData {
 
         let mut response = Response::build();
 
-        response.raw_header("Content-Type", "application/json").sized_body(Cursor::new(json));
+        response.header(ContentType::JSON).sized_body(Cursor::new(json));
 
         response.ok()
     }

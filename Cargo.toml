@@ -1,6 +1,6 @@
 [package]
 name = "rocket-json-response"
-version = "0.5.12"
+version = "0.5.13"
 authors = ["Magic Len <len@magiclen.org>"]
 edition = "2018"
 repository = "https://github.com/magiclen/rocket-json-response"

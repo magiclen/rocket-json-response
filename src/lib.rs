@@ -71,14 +71,16 @@ impl<'a, T: ToJSON> JSONResponse<'a, T> {
     }
 }
 
-impl<'a, T: ToJSON> Responder<'a> for JSONResponse<'a, T> {
-    fn respond_to(self, _: &Request) -> response::Result<'a> {
+impl<'r, 'o: 'r, T: ToJSON> Responder<'r, 'o> for JSONResponse<'o, T> {
+    fn respond_to(self, _: &Request) -> response::Result<'o> {
         let json =
             format!("{{\"code\":{},\"data\":{}}}", self.code.get_code(), self.data.to_json());
 
         let mut response = Response::build();
 
-        response.raw_header("Content-Type", "application/json").sized_body(Cursor::new(json));
+        response
+            .raw_header("Content-Type", "application/json")
+            .sized_body(json.len(), Cursor::new(json));
 
         response.ok()
     }
@@ -120,13 +122,15 @@ impl JSONResponseWithoutData {
     }
 }
 
-impl<'a> Responder<'a> for JSONResponseWithoutData {
-    fn respond_to(self, _: &Request) -> response::Result<'a> {
+impl<'r, 'o: 'r> Responder<'r, 'o> for JSONResponseWithoutData {
+    fn respond_to(self, _: &Request) -> response::Result<'o> {
         let json = format!("{{\"code\":{}}}", self.code.get_code());
 
         let mut response = Response::build();
 
-        response.raw_header("Content-Type", "application/json").sized_body(Cursor::new(json));
+        response
+            .raw_header("Content-Type", "application/json")
+            .sized_body(json.len(), Cursor::new(json));
 
         response.ok()
     }

@@ -1,7 +1,7 @@
 JSON Response for Rocket Framework
 ====================
 
-[![Build Status](https://travis-ci.org/magiclen/rocket-json-response.svg?branch=master)](https://travis-ci.org/magiclen/rocket-json-response)
+[![CI](https://github.com/magiclen/rocket-json-response/actions/workflows/ci.yml/badge.svg)](https://github.com/magiclen/rocket-json-response/actions/workflows/ci.yml)
 
 This is a crate which provides `JSONResponse` and `JSONResponseWithoutData` structs to response JSON format data with an additional **code** integer value.
 

@@ -13,7 +13,7 @@ license = "MIT"
 include = ["src/**/*", "Cargo.toml", "README.md", "LICENSE"]
 
 [dependencies]
-rocket = { git = "https://github.com/SergioBenitez/Rocket", version = "0.5.0-dev" }
+rocket = "0.5.0-rc.1"
 debug-helper = "0.3"
 
 [dev-dependencies]
@@ -23,5 +23,4 @@ enum-ordinalize = "3.1"
 
 [dependencies.json-gettext]
 version = "4"
-git = "https://github.com/magiclen/json-gettext"
 features = ["rocket"]

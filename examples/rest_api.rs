@@ -2,17 +2,13 @@
 extern crate rocket;
 
 #[macro_use]
-extern crate rocket_json_response;
-
-extern crate serde;
-
-#[macro_use]
-extern crate serde_derive;
-
-#[macro_use]
 extern crate enum_ordinalize;
 
-use rocket_json_response::{JSONResponse, JSONResponseCode, JSONResponseWithoutData};
+use rocket_json_response::{
+    serialize_to_json, JSONResponse, JSONResponseCode, JSONResponseWithoutData,
+};
+
+use serde::Serialize;
 
 #[derive(Serialize)]
 struct User {

@@ -9,9 +9,6 @@ See `examples`.
 */
 
 pub extern crate json_gettext;
-#[macro_use]
-extern crate debug_helper;
-extern crate rocket;
 
 mod json_response_code;
 mod to_json;
@@ -47,7 +44,7 @@ pub struct JSONResponse<'a, T: ToJSON = JSONGetTextValue<'a>> {
 impl<'a, T: ToJSON> Debug for JSONResponse<'a, T> {
     #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        impl_debug_for_struct!(JSONResponse, f, self, let .code = self.code.get_code(), let .data = self.data.to_json());
+        debug_helper::impl_debug_for_struct!(JSONResponse, f, self, let .code = self.code.get_code(), let .data = self.data.to_json());
     }
 }
 
@@ -102,7 +99,7 @@ pub struct JSONResponseWithoutData {
 impl Debug for JSONResponseWithoutData {
     #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        impl_debug_for_struct!(JSONResponseWithoutData, f, self, let .code = self.code.get_code());
+        debug_helper::impl_debug_for_struct!(JSONResponseWithoutData, f, self, let .code = self.code.get_code());
     }
 }
 

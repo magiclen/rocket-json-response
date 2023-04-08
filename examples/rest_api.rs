@@ -7,12 +7,11 @@ extern crate enum_ordinalize;
 use rocket_json_response::{
     serialize_to_json, JSONResponse, JSONResponseCode, JSONResponseWithoutData,
 };
-
 use serde::Serialize;
 
 #[derive(Serialize)]
 struct User {
-    id: i32,
+    id:   i32,
     name: String,
 }
 
@@ -48,13 +47,14 @@ fn id_str(id: String) -> JSONResponse<'static, String> {
 #[get("/user/magiclen")]
 fn user() -> JSONResponse<'static, User> {
     JSONResponse::ok(User {
-        id: 0,
-        name: "Magic Len".to_string(),
+        id: 0, name: "Magic Len".to_string()
     })
 }
 
-use rocket::outcome::Outcome;
-use rocket::request::{FromRequest, Outcome as RequestOutcome, Request};
+use rocket::{
+    outcome::Outcome,
+    request::{FromRequest, Outcome as RequestOutcome, Request},
+};
 
 struct UserAgent<'a> {
     user_agent: &'a str,
@@ -68,11 +68,9 @@ impl<'r> FromRequest<'r> for UserAgent<'r> {
         let user_agent: Option<&str> = request.headers().get("user-agent").next();
 
         match user_agent {
-            Some(user_agent) => {
-                Outcome::Success(UserAgent {
-                    user_agent,
-                })
-            }
+            Some(user_agent) => Outcome::Success(UserAgent {
+                user_agent,
+            }),
             None => Outcome::Forward(()),
         }
     }

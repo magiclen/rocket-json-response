@@ -1,5 +1,4 @@
-use crate::json_gettext::serde_json::Value;
-use crate::json_gettext::JSONGetTextValue;
+use crate::json_gettext::{serde_json::Value, JSONGetTextValue};
 
 /// A data type that can be converted to a JSON-format string.
 pub trait ToJSON {

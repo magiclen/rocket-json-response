@@ -13,17 +13,19 @@ pub extern crate json_gettext;
 mod json_response_code;
 mod to_json;
 
-use std::fmt::{self, Debug, Formatter};
-use std::io::Cursor;
-use std::marker::PhantomData;
-
-pub use json_response_code::JSONResponseCode;
-pub use to_json::ToJSON;
+use std::{
+    fmt::{self, Debug, Formatter},
+    io::Cursor,
+    marker::PhantomData,
+};
 
 use json_gettext::JSONGetTextValue;
-
-use rocket::request::Request;
-use rocket::response::{self, Responder, Response};
+pub use json_response_code::JSONResponseCode;
+use rocket::{
+    request::Request,
+    response::{self, Responder, Response},
+};
+pub use to_json::ToJSON;
 
 /// To respond JSON data.
 ///
@@ -36,8 +38,8 @@ use rocket::response::{self, Responder, Response};
 /// }
 /// ```
 pub struct JSONResponse<'a, T: ToJSON = JSONGetTextValue<'a>> {
-    code: Box<dyn JSONResponseCode>,
-    data: T,
+    code:    Box<dyn JSONResponseCode>,
+    data:    T,
     phantom: PhantomData<&'a T>,
 }
 
@@ -107,14 +109,14 @@ impl JSONResponseWithoutData {
     #[inline]
     pub fn ok() -> Self {
         JSONResponseWithoutData {
-            code: Box::new(0),
+            code: Box::new(0)
         }
     }
 
     #[inline]
     pub fn err<K: JSONResponseCode + 'static>(code: K) -> Self {
         JSONResponseWithoutData {
-            code: Box::new(code),
+            code: Box::new(code)
         }
     }
 }

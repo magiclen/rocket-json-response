@@ -3,6 +3,7 @@ name = "rocket-json-response"
 version = "0.6.3"
 authors = ["Magic Len <len@magiclen.org>"]
 edition = "2021"
+rust-version = "1.63"
 repository = "https://github.com/magiclen/rocket-json-response"
 homepage = "https://magiclen.org/rocket-json-response"
 keywords = ["rocket", "server", "web", "json"]
@@ -13,7 +14,7 @@ license = "MIT"
 include = ["src/**/*", "Cargo.toml", "README.md", "LICENSE"]
 
 [dependencies]
-rocket = "0.5.0-rc.2"
+rocket = "0.5.0-rc.3"
 debug-helper = "0.3"
 
 [dev-dependencies]

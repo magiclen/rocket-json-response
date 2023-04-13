@@ -9,7 +9,6 @@ homepage = "https://magiclen.org/rocket-json-response"
 keywords = ["rocket", "server", "web", "json"]
 categories = ["web-programming"]
 description = "This is a crate which provides `JSONResponse` and `JSONResponseWithoutData` structs to response JSON format data with an additional **code** integer value."
-readme = "README.md"
 license = "MIT"
 include = ["src/**/*", "Cargo.toml", "README.md", "LICENSE"]
 

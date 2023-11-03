@@ -52,6 +52,7 @@ fn user() -> JSONResponse<'static, User> {
 }
 
 use rocket::{
+    http::Status,
     outcome::Outcome,
     request::{FromRequest, Outcome as RequestOutcome, Request},
 };
@@ -71,7 +72,7 @@ impl<'r> FromRequest<'r> for UserAgent<'r> {
             Some(user_agent) => Outcome::Success(UserAgent {
                 user_agent,
             }),
-            None => Outcome::Forward(()),
+            None => Outcome::Forward(Status::BadRequest),
         }
     }
 }

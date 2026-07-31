@@ -19,7 +19,7 @@ impl ToJSON for str {
     }
 }
 
-impl<'a> ToJSON for &'a str {
+impl ToJSON for &str {
     #[inline]
     fn to_json(&self) -> String {
         JSONGetTextValue::from_str(self).to_json_string()

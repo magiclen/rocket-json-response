@@ -78,7 +78,7 @@ impl<'r> FromRequest<'r> for UserAgent<'r> {
 }
 
 #[get("/client/user-agent")]
-fn user_agent(user_agent: UserAgent) -> JSONResponse<&str> {
+fn user_agent(user_agent: UserAgent<'_>) -> JSONResponse<'_, &str> {
     JSONResponse::ok(user_agent.user_agent)
 }
 
